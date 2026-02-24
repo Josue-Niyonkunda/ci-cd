@@ -67,7 +67,7 @@ public class WaterPaymentApp extends JFrame {
                 JOptionPane.showMessageDialog(this, "Payment of " + amount + " accepted!");
                 messageLabel.setText("Thank you for your payment!");
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Enter a valid number!");
+                JOptionPane.showMessageDialog(this, "Could you enter a valid number?");
             }
         });
 
