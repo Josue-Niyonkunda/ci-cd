@@ -8,7 +8,7 @@ public class GuiCalculator extends JFrame {
 
     public GuiCalculator() {
         setTitle("Simple GUI Calculator");
-        setSize(300, 250);
+        setSize(600, 400);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
