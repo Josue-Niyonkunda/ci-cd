@@ -83,4 +83,4 @@ public class GuiCalculator extends JFrame {
                 System.out.println("Running in CI — GUI disabled");
             }
         }
-}
+}}
