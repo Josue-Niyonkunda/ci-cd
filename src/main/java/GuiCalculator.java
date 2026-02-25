@@ -4,7 +4,7 @@ import java.awt.event.ActionListener;
 
 public class GuiCalculator extends JFrame {
 
-    private JTextField num1Field, num2Field, resultField,noValue1;
+    private JTextField num1Field, num2Field, resultField;
 
     public GuiCalculator() {
         setTitle("Simple GUI Calculator");
