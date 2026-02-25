@@ -8,6 +8,9 @@ on:
 
 jobs:
 
+  # --------------------------
+  # CodeQL Analysis Job
+  # --------------------------
   analyze:
     name: Analyze
     runs-on: windows-latest
@@ -38,25 +41,73 @@ jobs:
         with:
           category: "/language:${{ matrix.language }}"
 
-  build-test:
+  # --------------------------
+  # Build and Test Job
+  # --------------------------
+  build:
+    name: Build & Test
     runs-on: windows-latest
     needs: analyze
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      - run: mvn clean verify
+      - name: Build & Test with Maven
+        run: mvn clean verify
 
-  deploy:
-    needs: build-test
+  # --------------------------
+  # Cleanup Job
+  # --------------------------
+  cleanup:
+    name: Cleanup Deployment
     runs-on: windows-latest
-    if: github.ref == 'refs/heads/main'
+    needs: [build]
+    environment: UAT
 
     steps:
-      - uses: actions/checkout@v4
-      - run: echo "Deploy your application here"
+      - name: Cleanup destination at ${{ vars.UAT_IP }}
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ vars.UAT_IP }}
+          port: ${{ vars.UAT_PORT }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            rm -rf ./deployment/*
+            rm -rf ${{ vars.UAT_TOMCAT }}/digi*
+
+  # --------------------------
+  # Deploy Job
+  # --------------------------
+  deploy:
+    name: Deploy Application
+    runs-on: windows-latest
+    needs: [cleanup]
+    environment: UAT
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: digibank.jar
+          path: ./deploy
+
+      - name: List deploy folder
+        run: ls -ltr ./deploy
+
+      - name: Deploy to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ vars.UAT_IP }}
+          port: ${{ vars.UAT_PORT }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: './deploy/digibank.jar'
+          target: 'deployment'
