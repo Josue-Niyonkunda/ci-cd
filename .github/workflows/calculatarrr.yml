@@ -106,7 +106,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
-          name: digibank.war
+          name: digibank.jar
           path: ./deploy
 
       - name: List downloaded artifact
