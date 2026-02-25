@@ -75,7 +75,6 @@ public class GuiCalculator extends JFrame {
         resultField.setText("");
     }
 
-    public static void main(String[] args) {
         public static void main(String[] args) {
             if (!GraphicsEnvironment.isHeadless()) {
                 SwingUtilities.invokeLater(() -> new GuiCalculator().setVisible(true));
@@ -83,4 +82,4 @@ public class GuiCalculator extends JFrame {
                 System.out.println("Running in CI — GUI disabled");
             }
         }
-}}
+}
