@@ -81,6 +81,6 @@ public class GuiCalculator extends JFrame {
             return;
         }
 
-        SwingUtilities.invokeLater(() -> new GuiCalculator().setVisible(true));
+        SwingUtilities.invokeLater(() -> new GuiCalculator().setVisible(false));
     }
 }
