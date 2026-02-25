@@ -76,6 +76,11 @@ public class GuiCalculator extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new GuiCalculator().setVisible(false);
+        if (GraphicsEnvironment.isHeadless()) {
+            System.out.println("CI environment detected — GUI not started.");
+            return;
+        }
+
+        SwingUtilities.invokeLater(() -> new GuiCalculator().setVisible(true));
     }
 }
