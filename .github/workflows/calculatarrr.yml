@@ -8,7 +8,7 @@ on:
 
 jobs:
   codeql-analysis:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     permissions:
       actions: read
       contents: read
@@ -18,26 +18,38 @@ jobs:
       fail-fast: false
       matrix:
         language: [ 'java' ]
+
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
       - uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
+
       - uses: github/codeql-action/autobuild@v3
         with:
           build-mode: none
+
       - uses: github/codeql-action/analyze@v3
 
   build-test:
     runs-on: windows-latest
     needs: codeql-analysis
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
-      - run: mvn clean verify  # build + test
+
+      - run: mvn clean verify
 
   deploy:
     needs: build-test
@@ -45,8 +57,5 @@ jobs:
     if: github.ref == 'refs/heads/main'
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Deploy step
-        run: echo "Deploy your application here"
+      - uses: actions/checkout@v4
+      - run: echo "Deploy your application here"
