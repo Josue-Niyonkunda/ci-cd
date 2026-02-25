@@ -76,11 +76,11 @@ public class GuiCalculator extends JFrame {
     }
 
     public static void main(String[] args) {
-        if (GraphicsEnvironment.isHeadless()) {
-            System.out.println("CI environment detected — GUI not started!");
-            return;
+        public static void main(String[] args) {
+            if (!GraphicsEnvironment.isHeadless()) {
+                SwingUtilities.invokeLater(() -> new GuiCalculator().setVisible(true));
+            } else {
+                System.out.println("Running in CI — GUI disabled");
+            }
         }
-
-        SwingUtilities.invokeLater(() -> new GuiCalculator().setVisible(false));
-    }
 }
